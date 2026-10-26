@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:template_kit/app.dart';
+import 'package:template_kit/core/network/api_client.dart';
+import 'package:template_kit/core/repositories/employee_repository.dart';
 
 void main() {
-  runApp(const MainApp());
-}
-
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
-    );
-  }
+  final employeeRepository = EmployeeRepository(ApiClient());
+  runApp(App(employeeRepository: employeeRepository));
 }
