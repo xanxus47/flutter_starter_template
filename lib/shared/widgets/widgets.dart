@@ -1,4 +1,5 @@
 export 'app_button.dart';
+export 'bottom_nav.dart';
 export 'custom_cards_and_containers.dart';
 export 'dialogs_and_bottom_sheets.dart';
 export 'empty_and_error_states.dart';

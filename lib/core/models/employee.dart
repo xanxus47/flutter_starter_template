@@ -1,3 +1,56 @@
+enum EmployeeDepartment {
+  operationsAndWarning('Operations and Warning'),
+  adminAndTraining('Admin and Training'),
+  researchAndPlanning('Research and Planning'),
+  itPersonnel('I.T Personnel'),
+  regularOfficers('Regular Officers');
+
+  const EmployeeDepartment(this.label);
+
+  final String label;
+
+  static EmployeeDepartment fromEmployee({
+    required String name,
+    required String? position,
+    required PayType payType,
+  }) {
+    if (name.toLowerCase().contains('tordesillas')) {
+      return EmployeeDepartment.adminAndTraining;
+    }
+
+    final value = (position ?? '').toLowerCase();
+
+    if (value.contains('ldrrmo') || payType == PayType.recordOnly) {
+      return EmployeeDepartment.regularOfficers;
+    }
+    if (value.contains('emergency') ||
+        value.contains('communication equipment') ||
+        value.contains('warning')) {
+      return EmployeeDepartment.operationsAndWarning;
+    }
+    if (value.contains('planning') ||
+        value.contains('community development') ||
+        value.contains('project development') ||
+        value.contains('research')) {
+      return EmployeeDepartment.researchAndPlanning;
+    }
+    if (value.contains('i.t') ||
+        value.contains('it assistant') ||
+        value.contains('mapping') ||
+        value.contains('data analyst')) {
+      return EmployeeDepartment.itPersonnel;
+    }
+    if (value.contains('admin') ||
+        value.contains('training') ||
+        value.contains('procurement') ||
+        value.contains('capacity')) {
+      return EmployeeDepartment.adminAndTraining;
+    }
+
+    return EmployeeDepartment.operationsAndWarning;
+  }
+}
+
 enum PayType {
   dailyRate('daily_rate', 'Daily rate'),
   recordOnly('record_only', 'Record only');
@@ -64,6 +117,12 @@ class Employee {
     }
     return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
   }
+
+  EmployeeDepartment get department => EmployeeDepartment.fromEmployee(
+    name: name,
+    position: position,
+    payType: payType,
+  );
 
   String get subtitle {
     final details = <String>[

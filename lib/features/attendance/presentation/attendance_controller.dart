@@ -5,8 +5,8 @@ import 'package:template_kit/core/models/employee.dart';
 import 'package:template_kit/core/network/api_exception.dart';
 import 'package:template_kit/core/repositories/employee_repository.dart';
 
-class HomeController extends ChangeNotifier {
-  HomeController(this._repository) {
+class AttendanceController extends ChangeNotifier {
+  AttendanceController(this._repository) {
     load();
   }
 
@@ -21,6 +21,16 @@ class HomeController extends ChangeNotifier {
 
   bool get hasError => errorMessage != null;
   bool get isEmpty => !isLoading && !hasError && employees.isEmpty;
+
+  List<Employee> employeesIn(EmployeeDepartment department) {
+    return employees
+        .where((employee) => employee.department == department)
+        .toList()
+      ..sort(
+        (left, right) =>
+            left.name.toLowerCase().compareTo(right.name.toLowerCase()),
+      );
+  }
 
   Future<void> load({bool silent = false}) async {
     if (!silent) {
