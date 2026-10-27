@@ -28,7 +28,7 @@ class _AppShellState extends State<AppShell> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          HomePage(onOpenAttendance: () => setState(() => _currentIndex = 1)),
+          const HomePage(),
           AttendancePage(
             repository: widget.employeeRepository,
             attendanceRepository: widget.attendanceRepository,

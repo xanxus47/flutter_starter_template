@@ -199,18 +199,6 @@ class _AccordionEmployeeRow extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          Text(
-            employee.dailyRate == null
-                ? '—'
-                : employee.dailyRate!.toStringAsFixed(2),
-            style: const TextStyle(
-              color: AppCardStyle.accent,
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(width: 4),
           const Icon(
             Icons.chevron_right,
             size: 18,

@@ -32,21 +32,19 @@ class TimeRecordTable extends StatelessWidget {
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         border: TableBorder.all(color: AppCardStyle.border, width: 0.6),
         columnWidths: const {
-          0: FixedColumnWidth(36),
-          1: FixedColumnWidth(40),
-          2: FixedColumnWidth(52),
+          0: FixedColumnWidth(44),
+          1: FixedColumnWidth(52),
+          2: FixedColumnWidth(64),
           3: FixedColumnWidth(64),
           4: FixedColumnWidth(64),
           5: FixedColumnWidth(64),
           6: FixedColumnWidth(64),
           7: FixedColumnWidth(64),
-          8: FixedColumnWidth(64),
         },
         children: [
           TableRow(
             decoration: const BoxDecoration(color: Color(0xFFF3F6F4)),
             children: [
-              _header('#'),
               _header('DATE'),
               _header('DAY'),
               _header('AM IN'),
@@ -65,7 +63,6 @@ class TimeRecordTable extends StatelessWidget {
                     : const Color(0xFFFCFDFC),
               ),
               children: [
-                _cell('${i + 1}', muted: true),
                 _cell('${rows[i].date.day}'),
                 _cell(_weekdays[rows[i].date.weekday - 1], muted: true),
                 _cell(_time(rows[i].amIn)),

@@ -87,8 +87,8 @@ abstract final class TimeRecordBuilder {
       date: date,
       amIn: am.isNotEmpty ? am.first : null,
       amOut: am.length > 1 ? am.last : null,
-      pmIn: pm.length > 1 ? pm.first : null,
-      pmOut: pm.isNotEmpty ? pm.last : null,
+      pmIn: pm.isNotEmpty ? pm.first : null,
+      pmOut: pm.length > 1 ? pm.last : null,
       otIn: ot.isNotEmpty ? ot.first : null,
       otOut: ot.length > 1 ? ot.last : null,
     );
