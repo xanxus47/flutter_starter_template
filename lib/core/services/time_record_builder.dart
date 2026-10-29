@@ -1,6 +1,8 @@
 import 'package:template_kit/core/models/attendance.dart';
 import 'package:template_kit/core/models/employee.dart';
 
+enum _Slot { amIn, amOut, pmIn, pmOut, otIn, otOut }
+
 abstract final class TimeRecordBuilder {
   static const Duration _manilaOffset = Duration(hours: 8);
   static const Duration _duplicateWindow = Duration(minutes: 2);
@@ -62,35 +64,58 @@ abstract final class TimeRecordBuilder {
     ScheduleType scheduleType,
   ) {
     if (times.isEmpty) return TimeRecordRow(date: date);
+    if (scheduleType == ScheduleType.shiftNight) {
+      return _fromSlots(date, {
+        for (var i = 0; i < times.length && i < _Slot.values.length; i++)
+          _Slot.values[i]: times[i],
+      });
+    }
+    return _assignByWindow(date, times);
+  }
 
-    final am = <DateTime>[];
-    final pm = <DateTime>[];
-    final ot = <DateTime>[];
+  static TimeRecordRow _assignByWindow(DateTime date, List<DateTime> times) {
+    final assigned = <_Slot, DateTime>{};
+    const slots = [_Slot.amIn, _Slot.amOut, _Slot.pmIn, _Slot.pmOut];
 
     for (final time in times) {
-      if (scheduleType == ScheduleType.shiftNight) {
-        if (time.hour >= 12) {
-          am.add(time);
-        } else {
-          pm.add(time);
+      if (time.hour >= 18) continue;
+      for (final slot in slots) {
+        if (!assigned.containsKey(slot) && _fits(slot, time)) {
+          assigned[slot] = time;
+          break;
         }
-      } else if (time.hour < 12) {
-        am.add(time);
-      } else if (time.hour >= 18) {
-        ot.add(time);
-      } else {
-        pm.add(time);
       }
     }
 
+    return _fromSlots(date, assigned);
+  }
+
+  static bool _fits(_Slot slot, DateTime time) {
+    final minutes = time.hour * 60 + time.minute;
+    switch (slot) {
+      case _Slot.amIn:
+        return minutes < 11 * 60;
+      case _Slot.amOut:
+        return minutes >= 11 * 60 && minutes < 13 * 60;
+      case _Slot.pmIn:
+        return minutes >= 12 * 60 && minutes < 16 * 60;
+      case _Slot.pmOut:
+        return minutes >= 12 * 60 && minutes < 18 * 60;
+      case _Slot.otIn:
+      case _Slot.otOut:
+        return minutes >= 18 * 60;
+    }
+  }
+
+  static TimeRecordRow _fromSlots(DateTime date, Map<_Slot, DateTime> assigned) {
     return TimeRecordRow(
       date: date,
-      amIn: am.isNotEmpty ? am.first : null,
-      amOut: am.length > 1 ? am.last : null,
-      pmIn: pm.isNotEmpty ? pm.first : null,
-      pmOut: pm.length > 1 ? pm.last : null,
-      otIn: ot.isNotEmpty ? ot.first : null,
-      otOut: ot.length > 1 ? ot.last : null,
+      amIn: assigned[_Slot.amIn],
+      amOut: assigned[_Slot.amOut],
+      pmIn: assigned[_Slot.pmIn],
+      pmOut: assigned[_Slot.pmOut],
+      otIn: assigned[_Slot.otIn],
+      otOut: assigned[_Slot.otOut],
     );
   }
 }
